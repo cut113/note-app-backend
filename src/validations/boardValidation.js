@@ -8,17 +8,16 @@ const createNew = async (req, res, next) => {
       'string.empty': 'Title cannot be an empty field',
       'string.min': 'Title should have a minimum length of {#limit}',
       'string.max': 'Title should have a maximum length of {#limit}',
+      'string.trim': 'Title cannot contain whitespace',
       'any.required': 'Title is a required field'
     }),
     description: Joi.string().required().min(3).max(256).trim().strict()
   })
 
   try {
-    console.log('req.body: ', req.body)
 
     await correctCondition.validateAsync(req.body, { abortEarly: false })
-    //next()
-    res.status(StatusCodes.CREATED).json({ message: 'Post ok' })
+    next()
   } catch (error) {
     console.log(error)
     res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
