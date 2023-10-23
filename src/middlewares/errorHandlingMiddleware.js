@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { StatusCodes } from 'http-status-codes'
-// import { env } from '~/config/environment'
+import { env } from '~/config/environment'
 
 export const errorHandlingMiddleware = (err, req, res, next) => {
 
@@ -12,8 +12,8 @@ export const errorHandlingMiddleware = (err, req, res, next) => {
     stack: err.stack
   }
   console.error(responseError)
-
-  // if (env.BUILD_MODE !== 'dev') delete responseError.stack
+  console.log(env.BUILD_MODE);
+  if (env.BUILD_MODE !== 'dev') delete responseError.stack
 
   res.status(responseError.statusCode).json(responseError)
 }

@@ -8,6 +8,6 @@ Router.get('/status', (req, res) => {
   res.status(StatusCodes.OK).json({ message: 'OK', code: StatusCodes.OK })
 })
 
-Router.use('/board', boardRoute)
+Router.use('/boards', boardRoute)
 
 export const APIs_V1 = Router
