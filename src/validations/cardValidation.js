@@ -4,7 +4,7 @@ import ApiError from '~/utils/ApiError'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 const createNew = async (req, res, next) => {
   const correctCondition = Joi.object({
-    title: Joi.string().required().min(3).max(50).trim().strict().messages({
+    title: Joi.string().required().min(3).max(30).trim().strict().messages({
       'string.base': 'Title should be a type of text',
       'string.empty': 'Title cannot be an empty field',
       'string.min': 'Title should have a minimum length of {#limit}',
@@ -12,15 +12,8 @@ const createNew = async (req, res, next) => {
       'string.trim': 'Title cannot contain whitespace',
       'any.required': 'Title is a required field'
     }),
-    description: Joi.string().required().min(3).max(256).trim().strict(),
-    type: Joi.string().required().valid('Public', 'Private').default('Public').trim().strict(),
-    ownerId: Joi.string().required(),
-    memberIds: Joi.array().items(
-      Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
-    ).default([]),
-    listOrderIds: Joi.array().items(
-      Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
-    ).default([]),
+    boardId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE),
+    listId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE),
   })
 
 
@@ -34,6 +27,6 @@ const createNew = async (req, res, next) => {
 
 }
 
-export const boardValidation = {
+export const cardValidation = {
   createNew
 }
