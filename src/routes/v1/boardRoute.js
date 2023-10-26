@@ -13,4 +13,10 @@ Router.route('/')
   .put()
   .delete()
 
+Router.route('/:id')
+  .get(boardController.getDetails)
+  .post()
+  .put()
+  .delete()
+
 export const boardRoute = Router
