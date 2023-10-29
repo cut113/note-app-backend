@@ -19,4 +19,5 @@ const getDetails = async (req, res, next) => {
 export const boardController = {
   createNew,
   getDetails
-}
+};
+

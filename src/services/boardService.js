@@ -12,14 +12,12 @@ const createNew = async(reqbody) => {
         const createdBoard = await boardModel.createNew(newBoard)
         console.log(createdBoard);
 
-
-        const getNewBoard = await boardModel.findOneById(createdBoard.insertedId)
-        return getNewBoard
-    }
-    catch(error){
-        throw error
-    }
-}
+    const getNewBoard = await boardModel.findOneById(createdBoard.insertedId);
+    return getNewBoard;
+  } catch (error) {
+    throw error;
+  }
+};
 
 const getDetails = async(boardId) => {
     try{
@@ -37,4 +35,4 @@ const getDetails = async(boardId) => {
 export const boardService = {
     createNew,
     getDetails
-    }
+    };
