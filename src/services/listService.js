@@ -1,17 +1,21 @@
+/* eslint-disable */
 import { slugify } from "~/utils/formatters"
 import { listModel } from "~/models/listModel"
+import { boardModel } from "~/models/boardModel"
 
 const createNew = async(reqbody) => {
     try{
-        const newList = {
+        const data = {
             ...reqbody,    
             slug: slugify(reqbody.title)  
         }
-        const createdList = await listModel.createNew(newList)
-        console.log(createdList);
-
-
-        const getNewList = await listModel.findOneById(createdList.insertedId)
+        const newList = await listModel.createNew(data)
+        console.log(typeof newList.boardId)
+        console.log(typeof newList.boardId.toString())
+        const updatedBoard = await boardModel.pushListOrder(newList.boardId.toString(), newList._id.toString())
+        console.log(updatedBoard)
+        
+        const getNewList = await listModel.findOneById(newList.insertedId)
         return getNewList
     }
     catch(error){
