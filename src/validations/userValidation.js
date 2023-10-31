@@ -10,7 +10,8 @@ const createNewUser = async (req, res, next) => {
     email: Joi.string().email().required(),
     username: Joi.string().alphanum().min(5).max(30).required(),
     password: Joi.string().pattern(new RegExp(OBJECT_PASSWORD_RULE)).required(),
-    avatar: Joi.string()
+    avatar: Joi.string(),
+    displayName: Joi.string().min(5).max(20).required()
   });
 
   try {
