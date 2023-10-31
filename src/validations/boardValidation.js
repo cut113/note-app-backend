@@ -2,6 +2,8 @@ import Joi from "joi";
 import { StatusCodes } from "http-status-codes";
 import ApiError from "~/utils/ApiError";
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/validators";
+import { BOARD_TYPES } from "~/utils/constants";
+
 const createNew = async (req, res, next) => {
   const correctCondition = Joi.object({
     title: Joi.string().required().min(3).max(50).trim().strict().messages({
@@ -15,7 +17,7 @@ const createNew = async (req, res, next) => {
     description: Joi.string().required().min(3).max(256).trim().strict(),
     type: Joi.string()
       .required()
-      .valid("Public", "Private")
+      .valid(BOARD_TYPES.PUBLIC, BOARD_TYPES.PRIVATE)
       .default("Public")
       .trim()
       .strict(),

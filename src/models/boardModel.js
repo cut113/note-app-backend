@@ -2,6 +2,10 @@ import Joi from 'joi'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 import { GET_DB } from '~/config/mongodb'
 import { ObjectId } from 'mongodb'
+import { BOARD_TYPES } from '~/utils/constants'
+import { listModel } from '~/models/listModel'
+import { cardModel } from '~/models/cardModel'
+
 
 const BOARD_COLLECTION_NAME = 'board';
 const BOARD_COLLECTION_SCHEMA = Joi.object({
@@ -10,7 +14,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
   description: Joi.string().required().min(3).max(256).trim().strict(),
   type: Joi.string()
     .required()
-    .valid('Public', 'Private')
+    .valid(BOARD_TYPES.PUBLIC, BOARD_TYPES.PRIVATE)
     .default('Public')
     .trim()
     .strict(),
@@ -56,10 +60,36 @@ const findOneById = async(id) => {
     }
 }
 
+// const getDetails = async(id) => {
+//     try{
+//         const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({ _id: new ObjectId(id)})
+//         return result
+//     } catch(error){
+//         throw new Error(error)
+//     }
+// }
+
 const getDetails = async(id) => {
     try{
-        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({ _id: new ObjectId(id)})
-        return result
+        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).aggregate([
+            {  $match: {
+                _id: new ObjectId(id),
+                _destroy: false
+            } },
+            { $lookup: {
+                from: listModel.LIST_COLLECTION_NAME,
+                localField: '_id',
+                foreignField: 'boardId',
+                as: 'lists'
+            } },
+            { $lookup: {
+                from: cardModel.CARD_COLLECTION_NAME,
+                localField: '_id',
+                foreignField: 'boardId',
+                as: 'cards'
+            } }
+        ]).toArray()
+        return result[0] || {}
     } catch(error){
         throw new Error(error)
     }
@@ -72,3 +102,7 @@ export const boardModel = {
     findOneById,
     getDetails
 }
+
+// boardID: 6540c766bae52bc1da1d2463
+// listID: 65412f024af33870af578a08
+// cardID: 65412f794af33870af578a0c
