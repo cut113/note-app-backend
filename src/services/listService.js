@@ -9,14 +9,13 @@ const createNew = async(reqbody) => {
             ...reqbody,    
             slug: slugify(reqbody.title)  
         }
+        console.log(data)
+        // transaction mongodb
         const newList = await listModel.createNew(data)
-        console.log(typeof newList.boardId)
-        console.log(typeof newList.boardId.toString())
+        // update columnOrder array in board collection
         const updatedBoard = await boardModel.pushListOrder(newList.boardId.toString(), newList._id.toString())
-        console.log(updatedBoard)
-        
-        const getNewList = await listModel.findOneById(newList.insertedId)
-        return getNewList
+
+        return newList
     }
     catch(error){
         throw error

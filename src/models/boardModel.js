@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 import { GET_DB } from '~/config/mongodb'
-import { ObjectId } from 'mongodb'
+import { ObjectID } from 'mongodb'
 import { BOARD_TYPES } from '~/utils/constants'
 import { listModel } from '~/models/listModel'
 import { cardModel } from '~/models/cardModel'
@@ -24,7 +24,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
         Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
     ).default([]),
 
-    listOrder: Joi.array().items(
+    listOrderIds: Joi.array().items(
         Joi.string()
     ).default([]),
 
@@ -53,7 +53,7 @@ const createNew = async (data) => {
 
 const findOneById = async (id) => {
     try {
-        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({ _id: new ObjectId(id) })
+        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({ _id: ObjectID(id) })
         return result
     } catch (error) {
         throw new Error(error)
@@ -67,12 +67,12 @@ const findOneById = async (id) => {
  */
 const pushListOrder = async (boardId, listId) => {
     try {
-        const updatedBoard = await GET_DB().collection(listModel.LIST_COLLECTION_NAME).findOneAndUpdate(
-            { _id: new ObjectId(boardId) },
-            { $push: { listOrder: listId } },
+        const updatedBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+            { _id: ObjectID(boardId) },
+            { $push: { listOrderIds: listId } },
             { returnOriginal: false }
         )
-        console.log(listId)
+        console.log("listID: " + listId);
 
         return updatedBoard.value
     } catch (error) {
@@ -85,7 +85,7 @@ const getDetails = async (id) => {
         const result = await GET_DB().collection(BOARD_COLLECTION_NAME).aggregate([
             {
                 $match: {
-                    _id: new ObjectId(id),
+                    _id: ObjectID(id),
                     _destroy: false
                 }
             },

@@ -1,18 +1,20 @@
 import { slugify } from "~/utils/formatters"
 import { cardModel } from "~/models/cardModel"
-
+import { listModel } from "~/models/listModel"
+/* eslint-disable */
 const createNew = async(reqbody) => {
     try{
-        const newcard = {
+        const data = {
             ...reqbody,    
             slug: slugify(reqbody.title)  
         }
-        const createdCard = await cardModel.createNew(newcard)
-        console.log(createdCard);
+        console.log(data)
+        // transaction mongodb
+        const newCard = await cardModel.createNew(data)
+        // update cardOrder array in list collection
+        const updatedBoard = await listModel.pushCardOrder(newCard.listId.toString(), newCard._id.toString())
 
-
-        const getNewCard = await cardModel.findOneById(createdCard.insertedId)
-        return getNewCard
+        return newCard
     }
     catch(error){
         throw error

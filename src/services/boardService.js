@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { slugify } from "~/utils/formatters"
 import { boardModel } from "~/models/boardModel"
 import { ApiError } from "~/utils/ApiError"
@@ -25,6 +26,11 @@ const getDetails = async(boardId) => {
         if(!board){
             throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
         }
+        board.lists.forEach(list => {
+            list.cards = board.cards.filter(c => c.listId.toString() === list._id.toString())
+        })
+        // Remove cards data from boards detail
+        delete board.cards
         return board
     }
     catch(error){
