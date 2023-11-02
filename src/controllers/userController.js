@@ -3,11 +3,17 @@ import { userService } from "~/services/userService";
 
 const validateUser = async (req, res) => {
   try {
-    const user = await userService.getUser(
+    const result = await userService.getUser(
       req.body.username,
       req.body.password
     );
-    res.status(StatusCodes.ACCEPTED).json(user);
+
+    if (result.isSuccess) {
+      res.status(StatusCodes.ACCEPTED).json(result);
+    }
+    else {
+      res.status(StatusCodes.BAD_REQUEST).json(result);
+    }
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error });
   }
