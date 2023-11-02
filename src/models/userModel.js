@@ -1,6 +1,17 @@
 import { GET_DB } from "~/config/mongodb";
 const USER_COLLECTION_NAME = "user";
 
+const getUserByUsername = async (username) => {
+  try {
+    const result = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .findOne({ username });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 const login = async (username, password) => {
   try {
     const result = await GET_DB()
@@ -22,8 +33,7 @@ const usernameExisted = async (username) => {
     const result = await GET_DB()
       .collection(USER_COLLECTION_NAME)
       .findOne({ username });
-    if (result) return true;
-    else return false;
+    return !!result;
   } catch (error) {
     throw new Error(error);
   }
@@ -43,5 +53,6 @@ const createUser = async (user) => {
 export const userModel = {
   login,
   createUser,
-  usernameExisted
+  usernameExisted,
+  getUserByUsername
 };

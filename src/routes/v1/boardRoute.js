@@ -2,6 +2,7 @@ import Express from "express";
 import { StatusCodes } from "http-status-codes";
 import { boardValidation } from "~/validations/boardValidation";
 import { boardController } from "~/controllers/boardController";
+import { verifyToken } from "~/middlewares/authJwt";
 
 const Router = Express.Router();
 
@@ -14,9 +15,9 @@ Router.route("/")
   .delete();
 
 Router.route('/:id')
-  .get(boardController.getDetails)
+  .get([verifyToken], boardController.getDetails)
   .post()
   .put()
-  .delete()
+  .delete();
 
-export const boardRoute = Router
+export const boardRoute = Router;
