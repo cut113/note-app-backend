@@ -28,14 +28,18 @@ const validateUser = async (req, res, next) => {
       "any.required": "Username is required",
       "string.empty": "Username is note allowed to be empty",
       "string.min": "Username is at least {#limit} characters",
-      "string.max": "Username is maxmimum at {#limit} characters"
+      "string.max": "Username is maximum at {#limit} characters",
     }),
     password: Joi.string()
       .pattern(new RegExp(OBJECT_PASSWORD_RULE))
       .required()
+      .min(8)
+      .max(30)
       .messages({
         "any.required": "Password is required",
-        "string.empty": "Password is note allowed to be empty"
+        "string.empty": "Password is note allowed to be empty",
+        "string.min": "Password is at least {#limit} characters",
+        "string.max": "Password is maximum at {#limit} characters"
       })
   });
 
@@ -43,7 +47,10 @@ const validateUser = async (req, res, next) => {
     await correctCondition.validateAsync(req.body, { abortEarly: false });
     next();
   } catch (error) {
-    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, Error(error).message));
+    res.status(StatusCodes.UNPROCESSABLE_ENTITY).json({
+      code: StatusCodes.UNPROCESSABLE_ENTITY,
+      error: error.details
+    });
   }
 };
 
