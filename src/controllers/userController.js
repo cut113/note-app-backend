@@ -10,9 +10,13 @@ const validateUser = async (req, res) => {
 
     if (result.isSuccess) {
       res.status(StatusCodes.ACCEPTED).json(result);
-    }
-    else {
-      res.status(StatusCodes.BAD_REQUEST).json(result);
+    } else {
+      res
+        .status(StatusCodes.BAD_REQUEST)
+        .json({
+          code: StatusCodes.BAD_REQUEST,
+          message: "Username or password in correct"
+        });
     }
   } catch (error) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error });
@@ -40,5 +44,5 @@ const createNewUser = async (req, res) => {
 
 export const userController = {
   validateUser,
-  createNewUser
+  createNewUser,
 };
