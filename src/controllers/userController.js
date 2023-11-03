@@ -29,7 +29,6 @@ const createNewUser = async (req, res) => {
       req.body.username
     ));
     if (shouldCreateUser) {
-      // TODO: implement get Access Token
       const userId = await userService.createUser(req.body);
       res.status(StatusCodes.ACCEPTED).json(userId);
     } else {
@@ -44,5 +43,5 @@ const createNewUser = async (req, res) => {
 
 export const userController = {
   validateUser,
-  createNewUser,
+  createNewUser
 };

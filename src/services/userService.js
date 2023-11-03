@@ -21,7 +21,7 @@ const getUser = async (username, password) => {
         username: user.username,
         email: user.email,
         isSuccess: true,
-        accessToken: sign({ id: user.id }, secret, {
+        accessToken: sign({ id: user._id }, secret, {
           algorithm: "HS256",
           allowInsecureKeySizes: true,
           expiresIn: 86400 //24 hours

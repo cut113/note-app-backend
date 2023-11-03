@@ -1,6 +1,11 @@
 import { GET_DB } from "~/config/mongodb";
 const USER_COLLECTION_NAME = "user";
 
+/**
+ * Get user by username
+ * @param {string} username
+ * @returns {user: {id: user._id,username: user.username,email: user.email,isSuccess: true,role: user.role} || null}
+ */
 const getUserByUsername = async (username) => {
   try {
     const result = await GET_DB()
@@ -12,16 +17,6 @@ const getUserByUsername = async (username) => {
   }
 };
 
-const login = async (username, password) => {
-  try {
-    const result = await GET_DB()
-      .collection(USER_COLLECTION_NAME)
-      .findOne({ username, password });
-    return result;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
 
 /**
  * Check if Username already exsited
@@ -51,7 +46,6 @@ const createUser = async (user) => {
 };
 
 export const userModel = {
-  login,
   createUser,
   usernameExisted,
   getUserByUsername
