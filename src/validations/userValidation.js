@@ -28,7 +28,7 @@ const validateUser = async (req, res, next) => {
       "any.required": "Username is required",
       "string.empty": "Username is note allowed to be empty",
       "string.min": "Username is at least {#limit} characters",
-      "string.max": "Username is maximum at {#limit} characters",
+      "string.max": "Username is maximum at {#limit} characters"
     }),
     password: Joi.string()
       .pattern(new RegExp(OBJECT_PASSWORD_RULE))
@@ -39,7 +39,8 @@ const validateUser = async (req, res, next) => {
         "any.required": "Password is required",
         "string.empty": "Password is note allowed to be empty",
         "string.min": "Password is at least {#limit} characters",
-        "string.max": "Password is maximum at {#limit} characters"
+        "string.max": "Password is maximum at {#limit} characters",
+        "string.pattern.base": "Password must be at least 8 and at most 30 charaters. And does not contain special characters"
       })
   });
 
