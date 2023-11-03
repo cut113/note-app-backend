@@ -40,7 +40,7 @@ const validateUser = async (req, res, next) => {
         "string.empty": "Password is note allowed to be empty",
         "string.min": "Password is at least {#limit} characters",
         "string.max": "Password is maximum at {#limit} characters",
-        "string.pattern.base": "Password must be at least 8 and at most 30 charaters. And does not contain special characters"
+        "string.pattern.base": "Password must be at least 8 and at most 30 charaters. And does not contains special characters"
       })
   });
 
