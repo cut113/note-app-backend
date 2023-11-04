@@ -10,6 +10,15 @@ const START_SERVER = () => {
 
   app.use(express.json());
 
+  // Add headers to response
+  app.use((req, res, next) => {
+    res.header(
+      "Access-Control-Allow-Headers",
+      "x-access-token, Origin, Content-Type, Accept"
+    );
+    next();
+  });
+
   app.use("/v1", APIs_V1);
 
   app.use(errorHandlingMiddleware);
@@ -37,10 +46,3 @@ const START_SERVER = () => {
   }
 })();
 
-// CONNECT_DB()
-// .then(() => console.log('Connected to MongoDB successfully!'))
-// .then(() => START_SERVER())
-// .catch(error => {
-//   console.error(error)
-//   process.exit(0)
-// })
