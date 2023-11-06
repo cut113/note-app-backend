@@ -12,6 +12,7 @@ const createNew = async(reqbody) => {
         console.log(data)
         // transaction mongodb
         const newList = await listModel.createNew(data)
+        newList.cards = []
         // update columnOrder array in board collection
         const updatedBoard = await boardModel.pushListOrder(newList.boardId.toString(), newList._id.toString())
 
