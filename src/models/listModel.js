@@ -1,13 +1,12 @@
 import Joi from 'joi'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 import { GET_DB } from '~/config/mongodb'
-import { ObjectID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 // Define Collection (name & schema)
 const LIST_COLLECTION_NAME = "columns";
 const LIST_COLLECTION_SCHEMA = Joi.object({
   boardId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE),
   title: Joi.string().required().min(3).max(50).trim().strict(),
-  slug: Joi.string().required().min(3).trim().strict(),
 
   cardOrderIds: Joi.array()
     .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
@@ -32,10 +31,10 @@ const createNew = async (data) => {
     const validData = await validateSchema(data)
     const insertValue = {
       ...validData,
-      boardId: ObjectID(validData.boardId)
+      boardId: new ObjectId(validData.boardId)
     }
     const createdList = await GET_DB().collection(LIST_COLLECTION_NAME).insertOne(insertValue)
-    return createdList.ops[0]
+    return createdList
   } catch (error) {
     throw new Error(error)
   }
@@ -44,7 +43,7 @@ const createNew = async (data) => {
 const pushCardOrder = async (listId, cardId) => {
   try {
     const updatedList = await GET_DB().collection(LIST_COLLECTION_NAME).findOneAndUpdate(
-      { _id: ObjectID(listId) },
+      { _id: new ObjectId(listId) },
       { $push: { cardOrderIds: cardId } },
       { returnOriginal: false }
     )
@@ -59,7 +58,7 @@ const pushCardOrder = async (listId, cardId) => {
 const findOneById = async (id) => {
   try {
     console.log("tim listid: " + id)
-    const result = await GET_DB().collection(LIST_COLLECTION_NAME).findOne({ _id: ObjectID(id) })
+    const result = await GET_DB().collection(LIST_COLLECTION_NAME).findOne({ _id: new ObjectId(id) })
     console.log("tim listid: " + result)
     return result
   } catch (error) {
@@ -71,7 +70,7 @@ const findOneById = async (id) => {
 const update = async (id, data) => {
   try {
     const updatedList = await GET_DB().collection(LIST_COLLECTION_NAME).findOneAndUpdate(
-      { _id: ObjectID(id) },
+      { _id: new ObjectId(id) },
       { $set: data },
       { returnOriginal: false }
     )

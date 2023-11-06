@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { ObjectID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { GET_DB } from '~/config/mongodb'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/validators";
 
@@ -59,8 +59,8 @@ const createNew = async (data) => {
     const validatedValue = await validateSchema(data, {abortEarly: false})
     const insertValue = {
       ...validatedValue,
-      boardId: ObjectID(validatedValue.boardId),
-      listId: ObjectID(validatedValue.listId)
+      boardId: new ObjectId(validatedValue.boardId),
+      listId: new ObjectId(validatedValue.listId)
     }
     const createdCard = await GET_DB().collection(CARD_COLLECTION_NAME).insertOne(insertValue)
     return createdCard.ops[0]
@@ -71,7 +71,7 @@ const createNew = async (data) => {
 
 const findOneById = async(id) => {
   try{
-      const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOne({ _id: ObjectID(id)})
+      const result = await GET_DB().collection(CARD_COLLECTION_NAME).findOne({ _id: new ObjectId(id)})
       return result
   } catch(error){
       throw new Error(error)
@@ -81,7 +81,7 @@ const findOneById = async(id) => {
 const update = async(id, data) => {
   try{
       const updatedCard = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
-        { _id: ObjectID(id) },
+        { _id: new ObjectId(id) },
         { $set: data },
         { returnOriginal: false}
       )

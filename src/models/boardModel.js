@@ -1,7 +1,7 @@
 import Joi from 'joi'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 import { GET_DB } from '~/config/mongodb'
-import { ObjectID } from 'mongodb'
+import { ObjectId } from 'mongodb'
 import { BOARD_TYPES } from '~/utils/constants'
 import { listModel } from '~/models/listModel'
 import { cardModel } from '~/models/cardModel'
@@ -53,7 +53,7 @@ const createNew = async (data) => {
 
 const findOneById = async (id) => {
     try {
-        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({ _id: ObjectID(id) })
+        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({ _id: new ObjectId(id) })
         return result
     } catch (error) {
         throw new Error(error)
@@ -65,14 +65,14 @@ const findOneById = async (id) => {
  * @param {string} boardId 
  * @param {string} listId 
  */
-const pushListOrder = async (boardId, listId) => {
+const pushListOrder = async (list) => {
+    console.log("listID is: " + list._id)
     try {
         const updatedBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
-            { _id: ObjectID(boardId) },
-            { $push: { listOrderIds: listId } },
+            { _id: new ObjectId(list.boardId) },
+            { $push: { listOrderIds: list._id } },
             { returnOriginal: false }
         )
-        console.log("listID: " + listId);
 
         return updatedBoard.value
     } catch (error) {
@@ -85,7 +85,7 @@ const getDetails = async (id) => {
         const result = await GET_DB().collection(BOARD_COLLECTION_NAME).aggregate([
             {
                 $match: {
-                    _id: ObjectID(id),
+                    _id: new ObjectId(id),
                     _destroy: false
                 }
             },
