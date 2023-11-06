@@ -40,14 +40,14 @@ const createNew = async (data) => {
   }
 }
 
-const pushCardOrder = async (listId, cardId) => {
+const pushCardOrder = async (card) => {
   try {
     const updatedList = await GET_DB().collection(LIST_COLLECTION_NAME).findOneAndUpdate(
-      { _id: new ObjectId(listId) },
-      { $push: { cardOrderIds: cardId } },
+      { _id: new ObjectId(card.listId) },
+      { $push: { cardOrderIds: card._id } },
       { returnOriginal: false }
     )
-    console.log("cardID: " + cardId);
+    console.log("cardID: " + card._id);
 
     return updatedList.value
   } catch (error) {

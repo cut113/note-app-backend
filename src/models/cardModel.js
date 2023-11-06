@@ -63,7 +63,7 @@ const createNew = async (data) => {
       listId: new ObjectId(validatedValue.listId)
     }
     const createdCard = await GET_DB().collection(CARD_COLLECTION_NAME).insertOne(insertValue)
-    return createdCard.ops[0]
+    return createdCard
   } catch(error){
     throw new Error(error)
   }

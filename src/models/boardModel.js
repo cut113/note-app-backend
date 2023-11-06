@@ -92,8 +92,19 @@ const getDetails = async (id) => {
             {
                 $lookup: {
                     from: listModel.LIST_COLLECTION_NAME,
-                    localField: '_id',
-                    foreignField: 'boardId',
+                    let: { boardId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$boardId', '$$boardId'] },
+                                        { $eq: ['$_destroy', false] }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
                     as: 'lists'
                 }
             },
