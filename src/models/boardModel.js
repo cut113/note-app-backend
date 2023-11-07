@@ -1,10 +1,21 @@
-import Joi from "joi";
-import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from "~/utils/validators";
-import { GET_DB } from "~/config/mongodb";
-import { ObjectId } from "mongodb";
+
+import Joi from 'joi'
+import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
+import { GET_DB } from '~/config/mongodb'
+import { ObjectId } from 'mongodb'
+import { BOARD_TYPES } from '~/utils/constants'
+import { listModel } from '~/models/listModel'
+import { cardModel } from '~/models/cardModel'
+
+
 
 const BOARD_COLLECTION_NAME = "board";
 const BOARD_COLLECTION_SCHEMA = Joi.object({
+
+// boardID: 6540c766bae52bc1da1d2463
+// listID: 65412f024af33870af578a08
+// cardID: 65412f794af33870af578a0c
+
   title: Joi.string().required().min(3).max(50).trim().strict(),
   slug: Joi.string().required().min(3).trim().strict(),
   description: Joi.string().required().min(3).max(256).trim().strict(),
@@ -24,7 +35,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
     .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
     .default([]),
 
-  createdAt: Joi.date().timestamp("javascript").default(Date.now()),
+  createdAt: Joi.date().timestamp("javascript").default(() => new Date().toISOString()),
   updatedAt: Joi.date().timestamp("javascript").default(null),
   _destroy: Joi.boolean().default(false)
 });
@@ -96,3 +107,4 @@ export const boardModel = {
   getDetails,
   checkIfUserIsMemberOfBoard
 };
+

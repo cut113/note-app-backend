@@ -1,26 +1,31 @@
-import { slugify } from "~/utils/formatters"
+/* eslint-disable */
 import { listModel } from "~/models/listModel"
+import { boardModel } from "~/models/boardModel"
 
-const createNew = async(reqbody) => {
-    try{
-        const newList = {
-            ...reqbody,    
-            slug: slugify(reqbody.title)  
+const createNew = async (reqbody) => {
+    try {
+        const data = {
+            ...reqbody
         }
-        const createdList = await listModel.createNew(newList)
-        console.log(createdList);
+        console.log(data)
+        // transaction mongodb
+        const newList = await listModel.createNew(data)
+        const getNewList = await listModel.findOneById(newList.insertedId)
+        if (getNewList) {
+            getNewList.cards = []
+            // update columnOrder array in board collection
+            const updatedBoard = await boardModel.pushListOrder(getNewList)
+        }
 
-
-        const getNewList = await listModel.findOneById(createdList.insertedId)
-        return getNewList
+        return newList
     }
-    catch(error){
+    catch (error) {
         throw error
     }
 }
 
-const update = async(id, reqbody) => {
-    try{
+const update = async (id, reqbody) => {
+    try {
         const updateData = {
             ...reqbody,
             updatedAt: Date.now()
@@ -28,7 +33,7 @@ const update = async(id, reqbody) => {
         const updatedList = await listModel.update(id, updateData)
         return updatedList
     }
-    catch(error){
+    catch (error) {
         throw error
     }
 }
@@ -38,4 +43,4 @@ const update = async(id, reqbody) => {
 export const listService = {
     createNew,
     update
-    }
+}
