@@ -89,12 +89,33 @@ const checkIfUserIsMemberOfBoard = async (id, userId) => {
   }
 };
 
+/**
+ * 
+ * @param {string} boardId 
+ * @param {string} listId 
+ */
+const pushListOrder = async (list) => {
+    console.log("listID is: " + list._id)
+    try {
+        const updatedBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+            { _id: new ObjectId(list.boardId) },
+            { $push: { listOrderIds: list._id } },
+            { returnOriginal: false }
+        )
+
+        return updatedBoard.value
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
   createNew,
   findOneById,
   getDetails,
-  checkIfUserIsMemberOfBoard
+  checkIfUserIsMemberOfBoard,
+    pushListOrder
 };
 

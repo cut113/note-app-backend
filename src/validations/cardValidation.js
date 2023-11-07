@@ -13,7 +13,27 @@ const createNew = async (req, res, next) => {
       'any.required': 'Title is a required field'
     }),
     boardId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE),
-    listId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
+    listId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE),
+    cover: Joi.string().optional().allow(null),
+    description: Joi.string().optional().allow(null),
+    memberIds: Joi.array().items(
+      Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
+    ).default([]),
+    comments: Joi.array().items(
+      Joi.object({
+        userId: Joi.string().required().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE),
+        content: Joi.string().required().trim().strict(),
+      }).default([]),
+
+    ).default([]),
+    attachments: Joi.array().items(
+      Joi.object({
+        url: Joi.string().required().trim().strict(),
+        name: Joi.string().required().trim().strict()
+      })
+    ).default([]),
+    startDate: Joi.date().timestamp('javascript').default(null),
+    endDate: Joi.date().timestamp('javascript').default(null),
   })
 
 

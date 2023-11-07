@@ -24,26 +24,22 @@ const createNew = async (reqbody) => {
 
 
 const getDetails = async(boardId) => {
-    try{
-        const board = await boardModel.getDetails(boardId)
-        if(!board){
-            throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
-        }
-        board.lists.forEach(list => {
-            list.cards = board.cards.filter(c => c.listId.toString() === list._id.toString())
-        })
-        delete board.cards
-        return board
-    }
-    catch(error){
-        throw error
-
-    }
-    return board;
-  } catch (error) {
-    throw error;
+  try{
+      const board = await boardModel.getDetails(boardId)
+      if(!board){
+          throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+      }
+      board.lists.forEach(list => {
+          list.cards = board.cards.filter(c => c.listId.toString() === list._id.toString())
+      })
+      // Remove cards data from boards detail
+      delete board.cards
+      return board
   }
-};
+  catch(error){
+      throw error
+  }
+}
 
 const verifyBoardAccess = async (boardId, userId) => {
   try {
