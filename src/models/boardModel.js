@@ -11,29 +11,19 @@ import { cardModel } from '~/models/cardModel'
 
 const BOARD_COLLECTION_NAME = "board";
 const BOARD_COLLECTION_SCHEMA = Joi.object({
+    title: Joi.string().required().min(3).max(50).trim().strict(),
+    slug: Joi.string().required().min(3).trim().strict(),
+    description: Joi.string().required().min(3).max(256).trim().strict(), 
+    type: Joi.string().required().valid('Public', 'Private').default('Public').trim().strict(),
 
-// boardID: 6540c766bae52bc1da1d2463
-// listID: 65412f024af33870af578a08
-// cardID: 65412f794af33870af578a0c
-
-  title: Joi.string().required().min(3).max(50).trim().strict(),
-  slug: Joi.string().required().min(3).trim().strict(),
-  description: Joi.string().required().min(3).max(256).trim().strict(),
-  type: Joi.string()
-    .required()
-    .valid("Public", "Private")
-    .default("Public")
-    .trim()
-    .strict(),
-
-  ownerId: Joi.string().required(),
-  memberIds: Joi.array()
-    .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
-    .default([]),
-
-  listOrderIds: Joi.array()
-    .items(Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE))
-    .default([]),
+    ownerId: Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE).required(),
+    memberIds: Joi.array().items(
+    Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
+    ).default([]),
+    
+    listOrderIds: Joi.array().items(
+    Joi.string().pattern(OBJECT_ID_RULE).message(OBJECT_ID_RULE_MESSAGE)
+    ).default([]),
 
   createdAt: Joi.date().timestamp("javascript").default(() => new Date().toISOString()),
   updatedAt: Joi.date().timestamp("javascript").default(null),
