@@ -1,17 +1,19 @@
-/* eslint-disable */
-import { slugify } from "~/utils/formatters"
-import { boardModel } from "~/models/boardModel"
-import { ApiError } from "~/utils/ApiError"
-import { StatusCodes } from "http-status-codes"
 
-const createNew = async(reqbody) => {
-    try{
-        const newBoard = {
-            ...reqbody,    
-            slug: slugify(reqbody.title)  
-        }
-        const createdBoard = await boardModel.createNew(newBoard)
-        console.log(createdBoard);
+/* eslint-disable no-useless-catch */
+import { slugify } from "~/utils/formatters";
+import { boardModel } from "~/models/boardModel";
+import { ApiError } from "~/utils/ApiError";
+import { StatusCodes } from "http-status-codes";
+
+
+const createNew = async (reqbody) => {
+  try {
+    const newBoard = {
+      ...reqbody,
+      slug: slugify(reqbody.title)
+    };
+    const createdBoard = await boardModel.createNew(newBoard);
+    console.log(createdBoard);
 
     const getNewBoard = await boardModel.findOneById(createdBoard.insertedId);
     return getNewBoard;
@@ -19,6 +21,7 @@ const createNew = async(reqbody) => {
     throw error;
   }
 };
+
 
 const getDetails = async(boardId) => {
     try{
@@ -29,16 +32,30 @@ const getDetails = async(boardId) => {
         board.lists.forEach(list => {
             list.cards = board.cards.filter(c => c.listId.toString() === list._id.toString())
         })
-        // Remove cards data from boards detail
         delete board.cards
         return board
     }
     catch(error){
         throw error
+
     }
-}
+    return board;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const verifyBoardAccess = async (boardId, userId) => {
+  try {
+    const result = await boardModel.checkIfUserIsMemberOfBoard(boardId, userId);
+    return !!result;
+  } catch (err) {
+    throw err;
+  }
+};
 
 export const boardService = {
-    createNew,
-    getDetails
-    };
+  createNew,
+  getDetails,
+  verifyBoardAccess
+};

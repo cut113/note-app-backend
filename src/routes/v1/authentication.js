@@ -15,8 +15,6 @@ router
 router
   .route("/register")
   .get()
-  .post(cors(), userValidation.createNewUser, (req, res) => {
-    res.status(StatusCodes.OK).json({ message: "Post ok" });
-  });
+  .post(cors(), userValidation.createNewUser, userController.createNewUser);
 
 export const authRoute = router;
