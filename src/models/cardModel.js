@@ -25,7 +25,7 @@ const CARD_COLLECTION_SCHEMA = Joi.object({
           .pattern(OBJECT_ID_RULE)
           .message(OBJECT_ID_RULE_MESSAGE),
         content: Joi.string().required().trim().strict(),
-        createdAt: Joi.date().timestamp("javascript").default(Date.now)
+        createdAt: Joi.date().timestamp("javascript").default(() => new Date().toISOString())
       }).default([])
     )
     .default([]),
@@ -40,7 +40,7 @@ const CARD_COLLECTION_SCHEMA = Joi.object({
   startDate: Joi.date().timestamp("javascript").default(null),
   endDate: Joi.date().timestamp("javascript").default(null),
 
-  createdAt: Joi.date().timestamp("javascript").default(Date.now),
+  createdAt: Joi.date().timestamp("javascript").default(() => new Date().toISOString()),
   updatedAt: Joi.date().timestamp("javascript").default(null),
   _destroy: Joi.boolean().default(false)
 });
