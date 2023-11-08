@@ -123,13 +123,28 @@ const getDetails = async (id) => {
     }
 }
 
+const update = async (id, data) => {
+    try {
+      const updatedBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+        { _id: new ObjectId(id) },
+        { $set: data },
+        { returnOriginal: false }
+      )
+      console.log(updatedBoard);
+      return updatedBoard.value
+    } catch (error) {
+      throw new Error(error)
+    }
+  }
+
 export const boardModel = {
     BOARD_COLLECTION_NAME,
     BOARD_COLLECTION_SCHEMA,
     createNew,
     pushListOrder,
     findOneById,
-    getDetails
+    getDetails,
+    update
 }
 
 // boardID: 6540c766bae52bc1da1d2463
