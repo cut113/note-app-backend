@@ -52,6 +52,15 @@ const update = async (id, reqbody) => {
     }
 }
 
+const verifyBoardAdmin = async (boardId, userId) => {
+  try {
+    const result = await boardModel.checkIfUserIsBoardAdmin(boardId, userId);
+    return !!result;
+  } catch (err) {
+    throw err;
+  }
+};
+
 const verifyBoardAccess = async (boardId, userId) => {
   try {
     const result = await boardModel.checkIfUserIsMemberOfBoard(boardId, userId);
@@ -65,5 +74,6 @@ export const boardService = {
   createNew,
   getDetails,
   update,
-  verifyBoardAccess
+  verifyBoardAccess,
+  verifyBoardAdmin,
 };
