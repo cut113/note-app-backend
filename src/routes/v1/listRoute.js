@@ -14,6 +14,9 @@ Router.route('/')
   .delete()
 
 Router.route('/:id')
+  .get((req, res) => {
+    res.status(StatusCodes.OK).json({ message: 'Get ok' })
+  })
   .put(listValidation.update, listController.update)
 
 export const listRoute = Router

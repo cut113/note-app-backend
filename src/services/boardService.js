@@ -1,8 +1,8 @@
-/* eslint-disable no-useless-catch */
-import { slugify } from "~/utils/formatters";
-import { boardModel } from "~/models/boardModel";
-import { ApiError } from "~/utils/ApiError";
-import { StatusCodes } from "http-status-codes";
+/* eslint-disable */
+import { slugify } from "~/utils/formatters"
+import { boardModel } from "~/models/boardModel"
+import { ApiError } from "~/utils/ApiError"
+import { StatusCodes } from "http-status-codes"
 
 const createNew = async (reqbody) => {
   try {
@@ -20,17 +20,37 @@ const createNew = async (reqbody) => {
   }
 };
 
-const getDetails = async (boardId) => {
-  try {
-    const board = await boardModel.getDetails(boardId);
-    if (!board) {
-      throw new ApiError(StatusCodes.NOT_FOUND, "Board not found");
+const getDetails = async(boardId) => {
+    try{
+        const board = await boardModel.getDetails(boardId)
+        if(!board){
+            throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+        }
+        board.lists.forEach(list => {
+            list.cards = board.cards.filter(c => c.listId.toString() === list._id.toString())
+        })
+        // Remove cards data from boards detail
+        delete board.cards
+        return board
     }
-    return board;
-  } catch (error) {
-    throw error;
-  }
-};
+    catch(error){
+        throw error
+    }
+}
+
+const update = async (id, reqbody) => {
+    try {
+        const updateData = {
+            ...reqbody,
+            updatedAt: Date.now()
+        }
+        const updatedBoard = await boardModel.update(id, updateData)
+        return updatedBoard
+    }
+    catch (error) {
+        throw error
+    }
+}
 
 const verifyBoardAccess = async (boardId, userId) => {
   try {
@@ -44,5 +64,6 @@ const verifyBoardAccess = async (boardId, userId) => {
 export const boardService = {
   createNew,
   getDetails,
+  update,
   verifyBoardAccess
 };

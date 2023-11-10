@@ -17,7 +17,7 @@ Router.route("/")
 Router.route("/:id")
   .get([verifyToken, verifyBoardAccess], boardController.getDetails)
   .post()
-  .put()
-  .delete();
+  .put(boardValidation.update, boardController.update)
+  .delete()
 
 export const boardRoute = Router;
