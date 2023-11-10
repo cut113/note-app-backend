@@ -155,15 +155,37 @@ const checkIfUserIsMemberOfBoard = async (id, userId) => {
   }
 };
 
+/**
+ * Check if username is in the memberIds of Board
+ * @param {string} id: board id
+ * @param {string} userId: user's id
+ * @returns {boolean} true if userId is in onwerId, false otherwise
+ */
+const checkIfUserIsBoardAdmin = async (id, userId) => {
+  try {
+    const ownerId = (
+      await GET_DB()
+        .collection(BOARD_COLLECTION_NAME)
+        .findOne({ _id: new ObjectId(id) })
+    ).ownerId;
+    console.log(ownerId);
+    console.log(userId);
+    return ownerId === userId;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
   createNew,
-    pushListOrder,
+  pushListOrder,
   findOneById,
   getDetails,
-    update,
-  checkIfUserIsMemberOfBoard
+  update,
+  checkIfUserIsMemberOfBoard,
+  checkIfUserIsBoardAdmin
 };
 
 // boardID: 6540c766bae52bc1da1d2463

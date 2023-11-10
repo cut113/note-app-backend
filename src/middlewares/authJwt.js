@@ -24,7 +24,9 @@ export const verifyToken = (req, res, next) => {
 export const verifyBoardAccess = async (req, res, next) => {
   const boardId = req.params.id;
   const userId = req.userId;
-  if (await boardService.verifyBoardAccess(boardId, userId)) {
+  if (await boardService.verifyBoardAdmin(boardId, userId)) {
+    next();
+  } else if (await boardService.verifyBoardAccess(boardId, userId)) {
     next();
   }
   else {
