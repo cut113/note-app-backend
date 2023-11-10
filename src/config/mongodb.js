@@ -1,5 +1,5 @@
 import { env } from "~/config/environment";
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { Db, MongoClient, ServerApiVersion } from "mongodb";
 
 let DatabaseInstance;
 
@@ -16,6 +16,10 @@ export const CONNECT_DB = async () => {
   DatabaseInstance = mongoClientInstance.db(env.DATABASE_NAME);
 };
 
+/**
+ * Get database instance
+ * @returns {Db}
+ */
 export const GET_DB = () => {
   if (!DatabaseInstance) throw new Error("Call connect first!");
   return DatabaseInstance;

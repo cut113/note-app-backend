@@ -7,7 +7,7 @@ import { listModel } from '~/models/listModel'
 import { cardModel } from '~/models/cardModel'
 
 
-const BOARD_COLLECTION_NAME = 'board';
+const BOARD_COLLECTION_NAME = "board";
 const BOARD_COLLECTION_SCHEMA = Joi.object({
     title: Joi.string().required().min(3).max(50).trim().strict(),
     slug: Joi.string().required().min(3).trim().strict(),
@@ -137,15 +137,34 @@ const update = async (id, data) => {
     }
   }
 
+
+/**
+ * Check if username is in the memberIds of Board
+ * @param {string} id: board id
+ * @param {string} userId: user's id
+ * @returns {boolean} true if userIds is in memberIds, false otherwise
+ */
+const checkIfUserIsMemberOfBoard = async (id, userId) => {
+  try {
+    const memberIds = (await GET_DB()
+      .collection(BOARD_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(id) })).memberIds;
+    return memberIds?.includes(userId);
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const boardModel = {
-    BOARD_COLLECTION_NAME,
-    BOARD_COLLECTION_SCHEMA,
-    createNew,
+  BOARD_COLLECTION_NAME,
+  BOARD_COLLECTION_SCHEMA,
+  createNew,
     pushListOrder,
-    findOneById,
-    getDetails,
-    update
-}
+  findOneById,
+  getDetails,
+    update,
+  checkIfUserIsMemberOfBoard
+};
 
 // boardID: 6540c766bae52bc1da1d2463
 // listID: 65412f024af33870af578a08
