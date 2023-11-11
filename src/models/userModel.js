@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { GET_DB } from "~/config/mongodb";
 const USER_COLLECTION_NAME = "user";
-import { ObjectId } from "mongodb";
+
 
 /**
  * Get user by username
