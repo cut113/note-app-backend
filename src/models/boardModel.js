@@ -168,8 +168,6 @@ const checkIfUserIsBoardAdmin = async (id, userId) => {
         .collection(BOARD_COLLECTION_NAME)
         .findOne({ _id: new ObjectId(id) })
     ).ownerId;
-    console.log(ownerId);
-    console.log(userId);
     return ownerId === userId;
   } catch (error) {
     throw new Error(error);

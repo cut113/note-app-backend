@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import { GET_DB } from "~/config/mongodb";
 const USER_COLLECTION_NAME = "user";
 import { ObjectId } from "mongodb";
@@ -62,9 +63,34 @@ const createUser = async (user) => {
   }
 };
 
+
+/**
+ * 
+ * @param {string} userId
+ * @param {string} boardId
+ */
+const addBoardToUser = async (userId, boardId) => {
+  try {
+    const result = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .updateOne(
+        { _id: new ObjectId(userId) },
+        {
+          $push: {
+            boards: boardId
+          }
+        }
+      );
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
 export const userModel = {
   createUser,
   usernameExisted,
   getUserByUsername,
-  getUserByUserId
+  getUserByUserId,
+  addBoardToUser
 };

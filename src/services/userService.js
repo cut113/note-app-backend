@@ -79,6 +79,7 @@ const createUser = async (reqbody) => {
       isActive: true,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      boards: []
     };
     const userId = await userModel.createUser(newUser);
     return userId;
