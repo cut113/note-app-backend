@@ -28,7 +28,7 @@ const BOARD_COLLECTION_SCHEMA = Joi.object({
         Joi.string()
     ).default([]),
 
-    createdAt: Joi.date().timestamp('javascript').default(Date.now()),
+    createdAt: Joi.date().timestamp('javascript').default(() => new Date().toISOString()),
     updatedAt: Joi.date().timestamp('javascript').default(null),
     _destroy: Joi.boolean().default(false)
 });
@@ -60,6 +60,16 @@ const findOneById = async (id) => {
     }
 }
 
+const findOneByUserId = async (memberIds) => {
+    try {
+        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).findOne({ memberIds: new ObjectId(memberIds) })
+        return result
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+
 /**
  * 
  * @param {string} boardId 
@@ -75,6 +85,50 @@ const pushListOrder = async (list) => {
         )
 
         return updatedBoard.value
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+
+const getBoardByUserId = async (id) => {
+    try {
+        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).aggregate([
+            {
+                $match: {
+                    ownerId: new ObjectId(id),
+                    _destroy: false
+                }
+            },
+            {
+                $lookup: {
+                    from: listModel.LIST_COLLECTION_NAME,
+                    let: { boardId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$boardId', '$$boardId'] },
+                                        { $eq: ['$_destroy', false] }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'lists'
+                }
+            },
+            {
+                $lookup: {
+                    from: cardModel.CARD_COLLECTION_NAME,
+                    localField: '_id',
+                    foreignField: 'boardId',
+                    as: 'cards'
+                }
+            }
+        ]).toArray()
+        return result || null
     } catch (error) {
         throw new Error(error)
     }
@@ -125,17 +179,17 @@ const getDetails = async (id) => {
 
 const update = async (id, data) => {
     try {
-      const updatedBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
-        { _id: new ObjectId(id) },
-        { $set: data },
-        { returnOriginal: false }
-      )
-      console.log(updatedBoard);
-      return updatedBoard.value
+        const updatedBoard = await GET_DB().collection(BOARD_COLLECTION_NAME).findOneAndUpdate(
+            { _id: new ObjectId(id) },
+            { $set: data },
+            { returnOriginal: false }
+        )
+        console.log(updatedBoard);
+        return updatedBoard.value
     } catch (error) {
-      throw new Error(error)
+        throw new Error(error)
     }
-  }
+}
 
 export const boardModel = {
     BOARD_COLLECTION_NAME,
@@ -144,6 +198,7 @@ export const boardModel = {
     pushListOrder,
     findOneById,
     getDetails,
+    getBoardByUserId,
     update
 }
 

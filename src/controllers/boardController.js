@@ -16,6 +16,14 @@ const getDetails = async (req, res, next) => {
   } catch (error) { next(error) }
 }
 
+const getBoardByUserIdDetails = async (req, res, next) => {
+  try {
+    const ownerId = req.params.id
+    const board = await boardService.getBoardByUserIdDetails(ownerId)
+    res.status(StatusCodes.OK).json(board)
+  } catch (error) { next(error) }
+}
+
 const update = async (req, res, next) => {
   try {
     const { id } = req.params
@@ -27,6 +35,7 @@ const update = async (req, res, next) => {
 export const boardController = {
   createNew,
   getDetails,
+  getBoardByUserIdDetails,
   update
 };
 
