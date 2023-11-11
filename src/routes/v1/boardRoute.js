@@ -20,4 +20,10 @@ Router.route("/:id")
   .put(boardValidation.update, boardController.update)
   .delete()
 
+Router.route('/owner/:id')
+  .get(boardController.getBoardByUserIdDetails)
+  .post()
+  .put(boardValidation.update, boardController.update)
+  .delete();
+
 export const boardRoute = Router;

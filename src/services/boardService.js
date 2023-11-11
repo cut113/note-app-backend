@@ -71,10 +71,26 @@ const verifyBoardAccess = async (boardId, userId) => {
   }
 };
 
+const getBoardByUserIdDetails = async(userId) => {
+  try{
+      const board = await boardModel.getBoardByUserId(userId)
+      if(!board){
+          throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+      }
+      // Remove cards data from boards detail
+      delete board.cards
+      return board
+  }
+  catch(error){
+      throw error
+  }
+}
+
 export const boardService = {
   createNew,
   getDetails,
   update,
   verifyBoardAccess,
   verifyBoardAdmin,
+  getBoardByUserIdDetails
 };

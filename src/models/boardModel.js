@@ -174,6 +174,49 @@ const checkIfUserIsBoardAdmin = async (id, userId) => {
   }
 };
 
+const getBoardByUserId = async (id) => {
+    try {
+        const result = await GET_DB().collection(BOARD_COLLECTION_NAME).aggregate([
+            {
+                $match: {
+                    ownerId: new ObjectId(id),
+                    _destroy: false
+                }
+            },
+            {
+                $lookup: {
+                    from: listModel.LIST_COLLECTION_NAME,
+                    let: { boardId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$boardId', '$$boardId'] },
+                                        { $eq: ['$_destroy', false] }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'lists'
+                }
+            },
+            {
+                $lookup: {
+                    from: cardModel.CARD_COLLECTION_NAME,
+                    localField: '_id',
+                    foreignField: 'boardId',
+                    as: 'cards'
+                }
+            }
+        ]).toArray()
+        return result || null
+    } catch (error) {
+        throw new Error(error)
+    }
+};
+
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -183,7 +226,8 @@ export const boardModel = {
   getDetails,
   update,
   checkIfUserIsMemberOfBoard,
-  checkIfUserIsBoardAdmin
+  checkIfUserIsBoardAdmin,
+    getBoardByUserId
 };
 
 // boardID: 6540c766bae52bc1da1d2463
