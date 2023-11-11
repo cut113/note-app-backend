@@ -18,6 +18,12 @@ Router.route("/:id")
   .get([verifyToken, verifyBoardAccess], boardController.getDetails)
   .post()
   .put(boardValidation.update, boardController.update)
-  .delete()
+  .delete();
+
+Router.route('/owner/:id')
+  .get(boardController.getBoardByUserIdDetails)
+  .post()
+  .put(boardValidation.update, boardController.update)
+  .delete();
 
 export const boardRoute = Router;

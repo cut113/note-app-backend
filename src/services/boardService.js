@@ -39,6 +39,21 @@ const getDetails = async(boardId) => {
     }
 }
 
+const getBoardByUserIdDetails = async(userId) => {
+  try{
+      const board = await boardModel.getBoardByUserId(userId)
+      if(!board){
+          throw new ApiError(StatusCodes.NOT_FOUND, 'Board not found')
+      }
+      // Remove cards data from boards detail
+      delete board.cards
+      return board
+  }
+  catch(error){
+      throw error
+  }
+}
+
 const update = async (id, reqbody) => {
     try {
         const updateData = {
@@ -74,6 +89,7 @@ const verifyBoardAccess = async (boardId, userId) => {
 export const boardService = {
   createNew,
   getDetails,
+  getBoardByUserIdDetails,
   update,
   verifyBoardAccess,
   verifyBoardAdmin,
