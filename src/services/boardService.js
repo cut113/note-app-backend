@@ -3,6 +3,7 @@ import { slugify } from "~/utils/formatters"
 import { boardModel } from "~/models/boardModel"
 import { ApiError } from "~/utils/ApiError"
 import { StatusCodes } from "http-status-codes"
+import { userModel } from "~/models/userModel"
 
 const createNew = async (reqbody) => {
   try {
@@ -12,7 +13,7 @@ const createNew = async (reqbody) => {
     };
     const createdBoard = await boardModel.createNew(newBoard);
     console.log(createdBoard);
-
+    const addBoardToUser = await userModel.addBoardToUser(reqbody.ownerId, createdBoard.insertedId.toString());
     const getNewBoard = await boardModel.findOneById(createdBoard.insertedId);
     return getNewBoard;
   } catch (error) {
