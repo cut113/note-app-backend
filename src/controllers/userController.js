@@ -41,7 +41,21 @@ const createNewUser = async (req, res) => {
   }
 };
 
+const getUserByUserId = async (req, res) => {
+  try {
+    const result = await userService.getUserByUserId(req.params.id);
+    if (result) {
+      res.status(StatusCodes.OK).json(result.username);
+    } else {
+      res.status(StatusCodes.NOT_FOUND).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: error });
+  }
+}
+
 export const userController = {
   validateUser,
-  createNewUser
+  createNewUser,
+  getUserByUserId
 };

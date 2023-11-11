@@ -44,10 +44,26 @@ const getUser = async (username, password) => {
   }
 };
 
+const getUserByUserId = async (id) => {
+  try {
+    const user = await userModel.getUserByUserId(id);
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 const usernameExisted = async (username) => {
   try {
     const result = userModel.usernameExisted(username);
-    return result;
+    return result = {
+      id: result._id,
+      username: result.username,
+      email: null,
+      isSuccess: false,
+      accessToken: null,
+      password: null,
+    };
   } catch (error) {
     throw error;
   }
@@ -75,4 +91,5 @@ export const userService = {
   getUser,
   usernameExisted,
   createUser,
+  getUserByUserId
 };

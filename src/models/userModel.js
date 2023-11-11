@@ -1,5 +1,6 @@
 import { GET_DB } from "~/config/mongodb";
 const USER_COLLECTION_NAME = "user";
+import { ObjectId } from "mongodb";
 
 /**
  * Get user by username
@@ -11,6 +12,22 @@ const getUserByUsername = async (username) => {
     const result = await GET_DB()
       .collection(USER_COLLECTION_NAME)
       .findOne({ username });
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+/**
+ * Get user by UserId
+ * @param {string} id
+ * @returns {user: {id: user._id,username: user.username} || null}
+ */
+const getUserByUserId = async (id) => {
+  try {
+    const result = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(id) });
     return result;
   } catch (error) {
     throw new Error(error);
@@ -48,5 +65,6 @@ const createUser = async (user) => {
 export const userModel = {
   createUser,
   usernameExisted,
-  getUserByUsername
+  getUserByUsername,
+  getUserByUserId
 };

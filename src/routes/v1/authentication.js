@@ -16,5 +16,9 @@ router
   .route("/register")
   .get()
   .post(cors(), userValidation.createNewUser, userController.createNewUser);
+router
+  .route("/:id")
+  .get(userController.getUserByUserId)
+
 
 export const authRoute = router;

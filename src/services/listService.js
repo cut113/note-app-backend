@@ -28,7 +28,7 @@ const update = async (id, reqbody) => {
     try {
         const updateData = {
             ...reqbody,
-            updatedAt: new Date.now().toISOString()
+            updatedAt: Date.now()
         }
         const updatedList = await listModel.update(id, updateData)
         return updatedList
