@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes'
+import { userModel } from '~/models/userModel'
 import { boardService } from '~/services/boardService.js'
 
 const createNew = async (req, res, next) => {
@@ -30,12 +31,26 @@ const getBoardByUserIdDetails = async (req, res, next) => {
     const board = await boardService.getBoardByUserIdDetails(ownerId)
     res.status(StatusCodes.OK).json(board)
   } catch (error) { next(error) }
+};
+
+const getBoardsByUserId = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const boards = await userModel.getBoardsByUser(id);
+    if (boards) {
+      res.status(StatusCodes.ACCEPTED).json(boards);
+    } else {
+      res.status(StatusCodes.BAD_REQUEST);
+    }
+  } catch (error) {
+    res.status(StatusCodes.BAD_REQUEST).json({ message: error });
+  }
 }
 
 export const boardController = {
   createNew,
   getDetails,
   update,
-  getBoardByUserIdDetails
+  getBoardByUserIdDetails,
+  getBoardsByUserId
 };
-

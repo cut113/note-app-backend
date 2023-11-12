@@ -37,7 +37,7 @@ const getUserByUserId = async (id) => {
 
 /**
  * Check if Username already exsited
- * @param {username} username
+ * @param {string} username
  * @returns {boolean} true if username existed, false otherwise
  */
 const usernameExisted = async (username) => {
@@ -62,9 +62,8 @@ const createUser = async (user) => {
   }
 };
 
-
 /**
- * 
+ *
  * @param {string} userId
  * @param {string} boardId
  */
@@ -86,10 +85,27 @@ const addBoardToUser = async (userId, boardId) => {
   }
 };
 
+/**
+ * 
+ * @param {string} userId
+ * @returns {Promise<string[]>} boards
+ */
+const getBoardsByUser = async (userId) => {
+  try {
+    const result = await GET_DB()
+      .collection(USER_COLLECTION_NAME)
+      .findOne({ _id: new ObjectId(userId) });
+    return result.boards;
+  } catch (error) {
+    throw new Error("DB Error: ", error);
+  }
+};
+
 export const userModel = {
   createUser,
   usernameExisted,
   getUserByUsername,
   getUserByUserId,
-  addBoardToUser
+  addBoardToUser,
+  getBoardsByUser
 };

@@ -88,9 +88,19 @@ const createUser = async (reqbody) => {
   }
 };
 
+const getBoardsByUser = async (id) => {
+  try {
+    const boards = await userModel.getBoardsByUser(id);
+    return boards;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const userService = {
   getUser,
   usernameExisted,
   createUser,
-  getUserByUserId
+  getUserByUserId,
+  getBoardsByUser
 };
