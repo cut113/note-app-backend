@@ -31,7 +31,8 @@ const getBoardByUserIdDetails = async (req, res, next) => {
     const board = await boardService.getBoardByUserIdDetails(ownerId)
     res.status(StatusCodes.OK).json(board)
   } catch (error) { next(error) }
-  
+};
+
 const getBoardsByUserId = async (req, res) => {
   try {
     const { id } = req.body;
@@ -50,10 +51,6 @@ export const boardController = {
   createNew,
   getDetails,
   update,
-<<<<<<< HEAD
-  getBoardByUserIdDetails
-=======
+  getBoardByUserIdDetails,
   getBoardsByUserId
->>>>>>> Add get board ids by user ids
 };
-
