@@ -15,7 +15,7 @@ export const verifyToken = (req, res, next) => {
     if (err)
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: "Unauthorized" });
+        .json({ message: "Token Unauthorized" });
     req.userId = decode.id;
     next();
   });
@@ -32,6 +32,6 @@ export const verifyBoardAccess = async (req, res, next) => {
   else {
     return res
       .status(StatusCodes.UNAUTHORIZED)
-      .json({ message: "Unauthorized" });
+      .json({ message: "Access Unauthorized" });
   }
 };

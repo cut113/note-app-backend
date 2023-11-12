@@ -69,7 +69,29 @@ const update = async (req, res, next) => {
 
 }
 
+const getBoardsByUser = async (req, res, next) => {
+  const correctCondition = Joi.object({
+    id: Joi.string().required().trim().strict().messages({
+      "string.base": "Id should be a type of hash",
+      "string.empty": "Id cannot be an empty field",
+      "string.trim": "Id cannot contain whitespace",
+      "any.required": "Id is a required field"
+    })
+  });
+
+  try {
+    await correctCondition.validateAsync(req.body, {
+      abortEarly: false,
+      allowUnknown: true,
+    });
+    next();
+  } catch (error) {
+    next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, Error(error).message));
+  }
+};
+
 export const boardValidation = {
   createNew,
-  update
+  update,
+  getBoardsByUser
 };
