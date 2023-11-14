@@ -190,7 +190,7 @@ const getBoardByUserId = async (id) => {
       .aggregate([
         {
           $match: {
-            ownerId: new ObjectId(id),
+            ownerId: id,
             _destroy: false,
           },
         },
@@ -229,22 +229,6 @@ const getBoardByUserId = async (id) => {
   }
 };
 
-const deleteBoard = async (id) => {
-  try {
-    // Soft delete: Update _destroy flag to true
-    const deletedBoard = await GET_DB()
-      .collection(BOARD_COLLECTION_NAME)
-      .findOneAndUpdate(
-        { _id: new ObjectId(id) },
-        { $set: { _destroy: true } },
-        { returnOriginal: false }
-      );
-
-    return deletedBoard.value;
-  } catch (error) {
-    throw new Error(error);
-  }
-};
 
 export const boardModel = {
   BOARD_COLLECTION_NAME,
@@ -257,7 +241,7 @@ export const boardModel = {
   checkIfUserIsMemberOfBoard,
   checkIfUserIsBoardAdmin,
   getBoardByUserId,
-  deleteBoard,
+  
 };
 
 // boardID: 6540c766bae52bc1da1d2463

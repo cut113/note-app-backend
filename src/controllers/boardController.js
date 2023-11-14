@@ -1,6 +1,6 @@
-import { StatusCodes } from 'http-status-codes'
-import { userModel } from '~/models/userModel'
-import { boardService } from '~/services/boardService.js'
+import { StatusCodes } from "http-status-codes";
+import { userModel } from "~/models/userModel";
+import { boardService } from "~/services/boardService.js";
 
 const createNew = async (req, res, next) => {
   try {
@@ -33,10 +33,12 @@ const update = async (req, res, next) => {
 
 const getBoardByUserIdDetails = async (req, res, next) => {
   try {
-    const ownerId = req.params.id
-    const board = await boardService.getBoardByUserIdDetails(ownerId)
-    res.status(StatusCodes.OK).json(board)
-  } catch (error) { next(error) }
+    const ownerId = req.params.id;
+    const board = await boardService.getBoardByUserIdDetails(ownerId);
+    res.status(StatusCodes.OK).json(board);
+  } catch (error) {
+    next(error);
+  }
 };
 
 const getBoardsByUserId = async (req, res) => {
@@ -51,12 +53,12 @@ const getBoardsByUserId = async (req, res) => {
   } catch (error) {
     res.status(StatusCodes.BAD_REQUEST).json({ message: error });
   }
-}
+};
 
 export const boardController = {
   createNew,
   getDetails,
   update,
   getBoardByUserIdDetails,
-  getBoardsByUserId
+  getBoardsByUserId,
 };
