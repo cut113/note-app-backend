@@ -116,8 +116,19 @@ const getDetails = async (id) => {
         {
           $lookup: {
             from: cardModel.CARD_COLLECTION_NAME,
-            localField: "_id",
-            foreignField: "boardId",
+            let: { boardId: "$_id" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$boardId", "$$boardId"] },
+                      { $eq: ["$_destroy", false] },
+                    ],
+                  },
+                },
+              },
+            ],
             as: "cards",
           },
         },
@@ -229,7 +240,6 @@ const getBoardByUserId = async (id) => {
   }
 };
 
-
 export const boardModel = {
   BOARD_COLLECTION_NAME,
   BOARD_COLLECTION_SCHEMA,
@@ -241,7 +251,6 @@ export const boardModel = {
   checkIfUserIsMemberOfBoard,
   checkIfUserIsBoardAdmin,
   getBoardByUserId,
-  
 };
 
 // boardID: 6540c766bae52bc1da1d2463
